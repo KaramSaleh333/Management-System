@@ -1,8 +1,9 @@
+<x-app-layout>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=800, initial-scale=1" />
     <title>ادارة الموظفين</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -38,29 +39,29 @@
             margin-bottom: 20px;
         }
 
-        .employee-details {
-            padding: 20px 0;
-            border-bottom: 1px solid #ddd;
-            direction: rtl;
+        .employee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        .employee-details:last-child {
-            border-bottom: none;
+        .employee-table th,
+        .employee-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: right; /* Adjust text alignment */
         }
 
-        .employee-details h2 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 5px;
+        .employee-table th {
+            background-color: #f2f2f2;
+            color: #333;
         }
 
-        .employee-details p {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 10px;
+        .employee-table td {
+            background-color: #fff;
         }
 
-        .employee-details .email {
+        .employee-table td.email {
             color: #007bff;
         }
 
@@ -69,6 +70,7 @@
             justify-content: flex-end;
             margin-bottom: 20px;
         }
+
         .search-container label {
             margin-right: 10px; /* Add some spacing between label and select */
         }
@@ -95,9 +97,9 @@
         }
 
         .search-container input[type="text"],
-        .search-container input[type="number"]
-        .search-container input[type="date"]
-        .search-container input[type="tel"]{
+        .search-container input[type="number"],
+        .search-container input[type="date"],
+        .search-container input[type="tel"] {
             display: none; /* Initially hide all input fields */
             padding: 10px;
             width: 200px; /* Adjust width as needed */
@@ -124,7 +126,8 @@
             background-color: #007bb6;
         }
 
-        .button1, .red-submit {
+        .button1,
+        .red-submit {
             display: inline-block;
             padding: 10px 20px;
             border-radius: 5px;
@@ -155,67 +158,84 @@
 </head>
 <body>
 
-    <x-app-layout>
-        <div class="container">
-            <form action="{{route('employee.show')}}" method="post">
-                @csrf
-            <div class="search-container">
-                <label for="search">اختر طريقة البحث :</label>
-                <select name="search" id="search" onchange="toggleTextInput(this)">
-                    <option value=""></option>
-                    <option value="option1">اسم الموظف</option>
-                    <option value="option2">اسم المستخدم</option>
-                    <option value="option3">الوظيفة</option>
-                    <option value="option4">المرتب اكثر من او يساوي</option>
-                    <option value="option5">تاريخ الانضمام</option>
-                    <option value="option6">المدينة</option>
-                    <option value="option7">رقم الموبايل</option>
-                </select>
-                <input type="text" name="name" id="name" placeholder="ادخل اسم الموظف" style="display: none;">
-                <input type="text" name="user_name" id="user_name" placeholder="ادخل اسم المستخدم للموظف" style="display: none;">
-                <input type="text" name="role" id="role" placeholder="ادخل الوظيفة" style="display: none;">
-                <input type="number" name="salary" id="salary" placeholder="ادخل المرتب" style="display: none;">
-                <input type="date" name="created_at" id="created_at" placeholder="ادخل تاريخ الانضمام" style="display: none;">
-                <input type="text" name="city" id="city" placeholder="ادخل المدينة" style="display: none;">
-                <input type="tel" name="telephone" id="telephone" placeholder="ادخل رقم الموظف" style="display: none;">
-                <button type="submit">بحث</button>
-            </div>
-            </form>
+<div class="container">
+    <form action="{{route('employee.show')}}" method="post">
+        @csrf
+        <div class="search-container">
+            <label for="search">اختر طريقة البحث :</label>
+            <select name="search" id="search" onchange="toggleTextInput(this)">
+                <option value=""></option>
+                <option value="option1">اسم الموظف</option>
+                <option value="option2">اسم المستخدم</option>
+                <option value="option3">الوظيفة</option>
+                <option value="option4">المرتب اكثر من او يساوي</option>
+                <option value="option5">تاريخ الانضمام</option>
+                <option value="option6">المدينة</option>
+                <option value="option7">رقم الموبايل</option>
+            </select>
+            <input type="text" name="name" id="name" placeholder="ادخل اسم الموظف" style="display: none;">
+            <input type="text" name="user_name" id="user_name" placeholder="ادخل اسم المستخدم للموظف" style="display: none;">
+            <input type="text" name="role" id="role" placeholder="ادخل الوظيفة" style="display: none;">
+            <input type="number" name="salary" id="salary" placeholder="ادخل المرتب" style="display: none;">
+            <input type="date" name="created_at" id="created_at" placeholder="ادخل تاريخ الانضمام" style="display: none;">
+            <input type="text" name="city" id="city" placeholder="ادخل المدينة" style="display: none;">
+            <input type="tel" name="telephone" id="telephone" placeholder="ادخل رقم الموظف" style="display: none;">
+            <button type="submit">بحث</button>
+        </div>
+    </form>
 
-            @if(auth()->user()->role == 'المالك')
-                <div class="search-container">
-                    <a href="{{ route('register') }}" class="button1">اضافة موظف</a>
-                </div>
-            @endif
+    @if(auth()->user()->role == 'المالك')
+        <div class="search-container">
+            <a href="{{ route('register') }}" class="button1">اضافة موظف</a>
+        </div>
+    @endif
 
+    <table class="employee-table">
+        <thead>
+            <tr>
+                <th>اسم الموظف</th>
+                <th>اسم المستخدم</th>
+                <th>الوظيفة</th>
+                <th>رقم الموبايل</th>
+                <th>المدينة</th>
+                <th>المرتب</th>
+                <th>تاريخ الانضمام</th>
+                @if(auth()->user()->role == 'المالك')
+                    <th>التحكم</th>
+                @endif
+            </tr>
+        </thead>
+        <tbody>
             @foreach($employees as $employee)
                 @if($employee->role == 'المالك')
                     @continue
                 @endif
-                <div class="employee-details">
-                    <h2>{{$employee->name}}</h2>
-                    <p><strong>اسم المستخدم : </strong><span class="email">{{$employee->user_name}}</span></p>
-                    
-                    <p><strong>الوظيفة :</strong> {{$employee->role}}</p>
-                    <p><strong>رقم الموبايل :</strong> {{$employee->telephone}}</p>
-                    <p><strong>المدينة :</strong> {{$employee->city}}</p>
-                    <p><strong>المرتب :</strong> {{$employee->salary}}</p>
-                    <p><strong>تاريخ الانضمام :</strong> {{date_format($employee->created_at , "Y:m:d")}}</p>
-                    
-                    @if(auth()->user()->role == 'المالك' )
-                        <form action="{{route('employee.destroy' , $employee->id)}}" method="post">
-                            @csrf
-                            @method('Delete')
-                            <a href="{{route('employee.edit' , $employee->id)}}" class="button1">تعديل</a>
-                            <input type="submit" class="red-submit" value="حذف">
-                        </form>
+                <tr>
+                    <td>{{$employee->name}}</td>
+                    <td class="email">{{$employee->user_name}}</td>
+                    <td>{{$employee->role}}</td>
+                    <td>{{$employee->telephone}}</td>
+                    <td>{{$employee->city}}</td>
+                    <td>{{$employee->salary}}</td>
+                    <td>{{date_format($employee->created_at , "Y:m:d")}}</td>
+                    @if(auth()->user()->role == 'المالك')
+                        <td>
+                            <form action="{{route('employee.destroy' , $employee->id)}}" method="post">
+                                @csrf
+                                @method('Delete')
+                                <a href="{{route('employee.edit' , $employee->id)}}" class="button1">تعديل</a>
+                                <input type="submit" class="red-submit" value="حذف">
+                            </form>
+                        </td>
                     @endif
-                </div>
-                <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+                </tr>
             @endforeach
-        </div>
-    </x-app-layout>
-    <script>
+        </tbody>
+    </table>
+
+</div>
+
+<script>
         function toggleTextInput(selectElement) {
             var nameInput = document.getElementById("name");
             var user_nameInput = document.getElementById("user_name");
@@ -265,3 +285,4 @@
 
 </body>
 </html>
+</x-app-layout>
